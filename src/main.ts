@@ -5,13 +5,10 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-    transport: Transport.RMQ,
+    transport: Transport.TCP,
     options: {
-      urls: [process.env.RMQ_HOST || 'amqp://localhost:5672'],
-      queue: process.env.RMQ_QUEUE || 'lms_queue',
-      queueOptions: {
-        durable: false,
-      },
+      host: '0.0.0.0',
+      port: parseInt(process.env.PORT || '3001'),
     },
   });
 
@@ -27,7 +24,7 @@ async function bootstrap() {
   );
 
   await app.listen();
-  console.log('LMS Microservice is listening on lms_queue...');
+  console.log('LMS Microservice is listening on TCP port 3001...');
 }
 
 bootstrap().catch((err) => {
